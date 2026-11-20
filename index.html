@@ -1,0 +1,317 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Quadro Garagem pelo WhatsApp</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: faixa de cabeçalho com indicadores, navegação fixa por seções, uma coluna no celular e grade de 12 colunas a partir de 960px. */
+:root {
+  --bg: #f3f5f2; --surf: #ffffff; --surf2: #e9ece7; --surf3: #dfe3dd; --fg: #171b18; --fg2: #5a635d; --fg3: #8a938d; --line: #d3d8d1;
+  --acc: #176a56; --acc-fg: #ffffff; --acc-soft: #d6ece3;
+  --ok: #1d7a3e; --ok-soft: #d9f1df; --warn: #8f6200; --warn-soft: #fbeccb; --bad: #b2271f; --bad-soft: #fadcd9;
+  --info: #2355a3; --info-soft: #dbe6f7; --dev: #0d7684; --dev-soft: #d5eef1; --prod: #74399a; --prod-soft: #eadcf4;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --r: 12px; --sombra: 0 1px 2px rgba(20, 30, 24, .06), 0 4px 14px rgba(20, 30, 24, .05);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1311; --surf: #171c19; --surf2: #1f2622; --surf3: #2a322d; --fg: #e9ece8; --fg2: #a3aca6; --fg3: #6f7872; --line: #2b332e;
+  --acc: #4fbf98; --acc-fg: #0b1a14; --acc-soft: #163a2e;
+  --ok: #67cf87; --ok-soft: #163b24; --warn: #e5b94c; --warn-soft: #3a3114; --bad: #ff7f76; --bad-soft: #44201d;
+  --info: #84b3ff; --info-soft: #1a2b47; --dev: #5fd0e4; --dev-soft: #14343a; --prod: #cba2f3; --prod-soft: #2e1f3e;
+  --sombra: 0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.35);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0f1311; --surf: #171c19; --surf2: #1f2622; --surf3: #2a322d; --fg: #e9ece8; --fg2: #a3aca6; --fg3: #6f7872; --line: #2b332e;
+  --acc: #4fbf98; --acc-fg: #0b1a14; --acc-soft: #163a2e;
+  --ok: #67cf87; --ok-soft: #163b24; --warn: #e5b94c; --warn-soft: #3a3114; --bad: #ff7f76; --bad-soft: #44201d;
+  --info: #84b3ff; --info-soft: #1a2b47; --dev: #5fd0e4; --dev-soft: #14343a; --prod: #cba2f3; --prod-soft: #2e1f3e;
+  --sombra: 0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--sans); margin: 0;
+  padding-block: 0 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); }
+h1, h2, h3, p { margin: 0; } h1, h2, h3 { text-wrap: balance; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+/* cabeçalho */
+.topo { padding-block: 16px 6px; }
+.topo .l1 { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: 10px; }
+.marca .logo { width: 34px; height: 34px; border-radius: 9px; background: var(--acc); color: var(--acc-fg); display: grid; place-items: center; font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: .02em; }
+.marca h1 { font-size: 19px; font-weight: 700; letter-spacing: -.012em; line-height: 1.15; }
+.marca .sub { font-family: var(--mono); font-size: 12px; color: var(--fg2); margin-top: 2px; }
+.fresco { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-family: var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--surf); border: 1px solid var(--line); color: var(--fg2); }
+.fresco .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.fresco.velho .dot { background: var(--warn); } .fresco.morto .dot { background: var(--bad); }
+.fresco.velho { color: var(--warn); border-color: var(--warn); } .fresco.morto { color: var(--bad); border-color: var(--bad); }
+.kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
+@media (min-width: 640px) { .kpis { grid-template-columns: repeat(5, 1fr); } }
+.kpi { background: var(--surf); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; min-width: 0; }
+.kpi .l { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--fg2); font-weight: 600; }
+.kpi .v { font-family: var(--mono); font-size: 24px; font-weight: 600; line-height: 1.1; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi .s { font-size: 12px; color: var(--fg2); margin-top: 3px; }
+.kpi.prog { grid-column: 1 / -1; }
+@media (min-width: 640px) { .kpi.prog { grid-column: span 2; } }
+.kpi.prog .v { display: flex; align-items: baseline; gap: 6px; } .kpi.prog .v small { font-size: 13px; color: var(--fg2); font-weight: 500; }
+.barra { height: 8px; border-radius: 4px; background: var(--surf3); overflow: hidden; margin-top: 8px; }
+.barra > i { display: block; height: 100%; background: var(--acc); border-radius: 4px; }
+.kpi.bad .v { color: var(--bad); } .kpi.warn .v { color: var(--warn); } .kpi.info .v { color: var(--info); } .kpi.dev .v { color: var(--dev); }
+.alerta { background: var(--bad-soft); color: var(--bad); border-radius: 10px; padding: 9px 12px; font-size: 13.5px; margin-top: 10px; font-weight: 500; }
+
+/* navegação por seções */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15; background: var(--bg); padding-block: 8px; margin: 6px 0 14px;
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { flex: 0 0 auto; text-decoration: none; color: var(--fg2); font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: var(--surf); border: 1px solid var(--line); white-space: nowrap; }
+.nav a b { font-family: var(--mono); font-weight: 600; color: var(--fg); margin-left: 4px; }
+.nav a.bad { border-color: var(--bad); color: var(--bad); } .nav a.bad b { color: var(--bad); }
+.nav a:focus-visible, button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+
+/* grade */
+.grade { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 960px) { .grade { grid-template-columns: repeat(12, 1fr); } .c12 { grid-column: span 12; } .c7 { grid-column: span 7; } .c5 { grid-column: span 5; } .c6 { grid-column: span 6; } }
+section { min-width: 0; scroll-margin-top: 64px; }
+section > h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .09em; color: var(--fg2); font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+section > h2 .cnt { font-family: var(--mono); font-weight: 500; text-transform: none; letter-spacing: 0; }
+.lista { display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--surf); border: 1px solid var(--line); border-radius: var(--r); padding: 13px 15px; min-width: 0; box-shadow: var(--sombra); }
+.vazio { color: var(--fg2); font-size: 13.5px; padding: 12px 14px; background: var(--surf); border: 1px dashed var(--line); border-radius: var(--r); }
+.vazio.ok { color: var(--ok); border-color: var(--ok); }
+
+/* agentes */
+.ags { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 700px) { .ags { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+.ag { position: relative; overflow: hidden; }
+.ag::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--fg3); }
+.ag.dev::before { background: var(--dev); } .ag.qa::before { background: var(--info); } .ag.product::before { background: var(--prod); }
+.ag .cab { display: flex; align-items: center; gap: 9px; }
+.ag .papel { font-weight: 700; font-size: 12px; letter-spacing: .09em; text-transform: uppercase; }
+.ag.dev .papel { color: var(--dev); } .ag.qa .papel { color: var(--info); } .ag.product .papel { color: var(--prod); }
+.ag .est { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--fg2); white-space: nowrap; }
+.sinal { width: 10px; height: 10px; border-radius: 50%; background: var(--fg3); flex: 0 0 auto; }
+.sinal.ativo { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); } .sinal.espera { background: var(--warn); box-shadow: 0 0 0 3px var(--warn-soft); } .sinal.parado { opacity: .55; }
+.ag .item { margin-top: 10px; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.ag .item .cod { font-family: var(--mono); background: var(--surf2); border-radius: 6px; padding: 1px 7px; margin-right: 6px; font-size: 14px; font-weight: 600; }
+.ag .item .tit { font-weight: 400; color: var(--fg); }
+.ag .meta { color: var(--fg2); font-size: 12.5px; margin-top: 6px; font-family: var(--mono); overflow-wrap: anywhere; }
+.ag .acao { margin-top: 10px; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: baseline; font-size: 13px; }
+.ag .acao .f { font-family: var(--mono); font-size: 11.5px; padding: 1px 7px; border-radius: 5px; background: var(--surf2); color: var(--fg2); white-space: nowrap; }
+.ag .acao .d { color: var(--fg); overflow-wrap: anywhere; }
+.ag .disse { margin-top: 10px; font-size: 13.5px; color: var(--fg2); border-left: 2px solid var(--line); padding-left: 10px; font-style: italic; overflow-wrap: anywhere; }
+
+/* reprovados e bloqueados */
+.fix { border-left: 5px solid var(--bad); }
+.fix .cab { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.fix .cod { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+.fix .tit { color: var(--fg2); font-size: 13.5px; margin-top: 4px; }
+.fix .bl { margin-top: 12px; }
+.fix .bl .r { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--fg2); font-weight: 700; margin-bottom: 4px; }
+.fix .motivo { font-size: 13.5px; }
+.fix ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.fix li { font-size: 13.5px; padding-left: 22px; position: relative; overflow-wrap: anywhere; }
+.fix li.f::before { content: "✗"; color: var(--bad); position: absolute; left: 2px; font-weight: 700; }
+.fix li.ok::before { content: "→"; color: var(--ok); position: absolute; left: 2px; font-weight: 700; }
+.fix .cmd { margin-top: 6px; font-family: var(--mono); font-size: 12.5px; background: var(--surf2); border-radius: 8px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
+.fix .quem { margin-top: 12px; font-size: 12.5px; color: var(--fg2); display: flex; gap: 6px; align-items: center; }
+.fix .quem b { color: var(--fg); background: var(--surf2); border-radius: 6px; padding: 1px 8px; font-family: var(--mono); }
+
+/* tags */
+.tag { display: inline-block; font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 6px; background: var(--surf2); color: var(--fg2); white-space: nowrap; font-weight: 500; }
+.tag.reprovado, .tag.bloqueado { background: var(--bad-soft); color: var(--bad); }
+.tag.pronto_para_teste { background: var(--warn-soft); color: var(--warn); }
+.tag.em_teste { background: var(--info-soft); color: var(--info); }
+.tag.em_dev { background: var(--dev-soft); color: var(--dev); }
+.tag.aprovado { background: var(--ok-soft); color: var(--ok); }
+
+/* itens */
+.its { display: flex; flex-direction: column; gap: 6px; }
+.it { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; background: var(--surf); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; align-items: center; }
+.it .cod { font-family: var(--mono); font-weight: 600; font-size: 13.5px; }
+.it .top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+.it .q { font-family: var(--mono); font-size: 11.5px; color: var(--fg2); white-space: nowrap; }
+.it .t { grid-column: 1 / -1; font-size: 13px; color: var(--fg2); overflow-wrap: anywhere; }
+.it.bloqueado .t, .it.reprovado .t { color: var(--fg); }
+
+/* diários */
+.diario .cab { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.diario .papel { font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; }
+.diario.dev .papel { color: var(--dev); } .diario.qa .papel { color: var(--info); } .diario.product .papel { color: var(--prod); }
+.diario .cabtxt { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
+.diario ul { margin: 8px 0 0; padding-left: 16px; color: var(--fg2); font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
+
+/* commits */
+.commits { padding: 4px 15px; }
+.commits .c { display: grid; grid-template-columns: auto auto 1fr; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 13px; align-items: baseline; }
+.commits .c:first-child { border-top: 0; }
+.commits .h { font-family: var(--mono); color: var(--fg2); font-size: 12px; white-space: nowrap; }
+.commits .q { font-family: var(--mono); font-size: 11px; padding: 1px 7px; border-radius: 5px; }
+.commits .q.dev { background: var(--dev-soft); color: var(--dev); } .commits .q.qa { background: var(--info-soft); color: var(--info); } .commits .q.product { background: var(--prod-soft); color: var(--prod); } .commits .q.outro { background: var(--surf2); color: var(--fg2); }
+.commits .m { min-width: 0; overflow-wrap: anywhere; }
+
+/* uso */
+.uso .kp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 640px) { .uso .kp { grid-template-columns: repeat(4, 1fr); } }
+.uso table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-family: var(--mono); }
+.uso td { padding: 7px 10px; border-top: 1px solid var(--line); white-space: nowrap; }
+.uso tr:first-child td { border-top: 0; }
+.uso td:first-child { font-weight: 600; font-family: var(--sans); }
+.uso .tab { margin-top: 8px; overflow-x: auto; background: var(--surf); border: 1px solid var(--line); border-radius: var(--r); }
+.uso .nota { color: var(--fg2); font-size: 12.5px; margin-top: 8px; }
+.orc { margin-top: 10px; } .orc .barra > i.w { background: var(--warn); } .orc .barra > i.b { background: var(--bad); }
+.rodape { margin-top: 28px; color: var(--fg3); font-size: 12px; text-align: center; font-family: var(--mono); }
+@media (prefers-reduced-motion: no-preference) { .sinal.ativo { animation: pulso 1.8s ease-in-out infinite; } @keyframes pulso { 50% { box-shadow: 0 0 0 7px transparent; } } }
+</style>
+
+<div class="wrap">
+<header class="topo">
+  <div class="l1">
+    <div class="marca"><div class="logo">WA</div><div><h1>Frente Garagem pelo WhatsApp</h1><div class="sub" id="sub"></div></div></div>
+    <span class="fresco" id="fresco"><span class="dot"></span><span id="fresco-txt">carregando…</span></span>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div id="alerta-api" class="alerta" hidden>⚠ o PostgreSQL local (garagem-pg-5434) não está de pé</div>
+</header>
+
+<nav class="nav" id="nav" aria-label="seções"></nav>
+
+<main class="grade">
+  <section class="c12" id="agentes"><h2>Agentes <span class="cnt" id="ag-cnt"></span></h2><div class="ags" id="ag-lista"></div></section>
+  <section class="c12" id="corrigir"><h2>Reprovados e bloqueados · como corrigir <span class="cnt" id="fix-cnt"></span></h2><div class="lista" id="fix-lista"></div></section>
+  <section class="c7" id="itens"><h2>Itens em andamento <span class="cnt" id="it-cnt"></span></h2><div class="its" id="it-lista"></div></section>
+  <section class="c5" id="diarios"><h2>Diários · última entrada</h2><div class="lista" id="di-lista"></div></section>
+  <section class="c6" id="commits"><h2>Commits · últimos</h2><div class="card commits" id="co-lista"></div></section>
+  <section class="c6 uso" id="uso"><h2>Uso de tokens · hoje</h2><div class="kp" id="uso-kp"></div><div class="tab"><table id="uso-tab"></table></div><div id="orc" class="orc" hidden></div><div class="nota">Contexto lido inclui o cache. Os limites da conta (janela de 5 h e semanal) só aparecem em /usage no Claude Code.</div></section>
+</main>
+<p class="rodape" id="rodape"></p>
+</div>
+
+<script id="dados" type="application/json">null</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var embutido; try { embutido = JSON.parse(document.getElementById("dados").textContent); } catch (e) { embutido = null; }
+  var MODO_FETCH = !embutido;           // GitHub Pages: busca quadro.json ao lado da página e renderiza de novo a cada 60 s
+  var timers = [];
+  function render(d) {
+  timers.forEach(clearInterval); timers = [];
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var fmt = function (n) { n = n || 0; return n >= 1e9 ? (n / 1e9).toFixed(2) + " B" : n >= 1e6 ? (n / 1e6).toFixed(1) + " M" : Math.round(n / 1e3) + " k"; };
+  var ROT = { reprovado: "reprovado", bloqueado: "bloqueado", em_teste: "em teste", pronto_para_teste: "pronto p/ teste", em_dev: "em dev", aprovado: "aprovado" };
+  if (!d) { $("fresco-txt").textContent = MODO_FETCH ? "buscando dados…" : "sem dados"; return; }
+
+  // frescor + recarga: a cada volta à página (ou a cada 3 min visível), se os dados tiverem mais de 3 min, recarrega para pegar a versão mais nova
+  var gerado = new Date(d.gerado_em);
+  var idadeMin = function () { return (Date.now() - gerado.getTime()) / 60000; };
+  function fresco() {
+    var m = Math.round(idadeMin()); var el = $("fresco");
+    el.className = "fresco" + (m > 30 ? " morto" : m > 12 ? " velho" : "");
+    $("fresco-txt").textContent = (m < 1 ? "agora" : "há " + m + " min") + " · " + gerado.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  }
+  fresco(); timers.push(setInterval(fresco, 20000));
+  if (!MODO_FETCH) {
+    var recarregou = false;
+    var talvezRecarregar = function () { if (!recarregou && document.visibilityState === "visible" && idadeMin() > 3) { recarregou = true; location.reload(); } };
+    document.addEventListener("visibilitychange", talvezRecarregar);
+    timers.push(setInterval(talvezRecarregar, 180000));
+  }
+
+  // cabeçalho
+  $("sub").textContent = d.branch + " @ " + (d.head || "").slice(0, 7) + (d.arquivos_fora_commit ? " · " + d.arquivos_fora_commit + " arq. fora do commit" : "");
+  var pct = d.total ? Math.round(100 * d.aprovados / d.total) : 0;
+  var c = d.contagem || {}; var prob = (c.reprovado || 0) + (c.bloqueado || 0);
+  $("kpis").innerHTML =
+    '<div class="kpi prog"><div class="l">aprovados</div><div class="v"><span>' + d.aprovados + '</span><small>de ' + d.total + ' · ' + pct + '%</small></div><div class="barra"><i style="width:' + pct + '%"></i></div></div>' +
+    '<div class="kpi ' + (prob ? "bad" : "") + '"><div class="l">a corrigir</div><div class="v">' + prob + '</div><div class="s">' + (c.reprovado || 0) + ' reprov. · ' + (c.bloqueado || 0) + ' bloq.</div></div>' +
+    '<div class="kpi warn"><div class="l">p/ teste</div><div class="v">' + ((c.pronto_para_teste || 0) + (c.em_teste || 0)) + '</div><div class="s">' + (c.em_teste || 0) + ' em teste</div></div>' +
+    '<div class="kpi dev"><div class="l">em dev</div><div class="v">' + (c.em_dev || 0) + '</div><div class="s">' + d.a_fazer + ' a fazer</div></div>';
+  $("alerta-api").hidden = !!d.api_ok;
+
+  // navegação
+  var ags = d.agentes || [], cx = d.corrigir || [], its = d.itens || [];
+  $("nav").innerHTML =
+    '<a href="#agentes">Agentes<b>' + ags.length + '</b></a>' +
+    '<a href="#corrigir"' + (cx.length ? ' class="bad"' : '') + '>Corrigir<b>' + cx.length + '</b></a>' +
+    '<a href="#itens">Itens<b>' + its.length + '</b></a>' +
+    '<a href="#diarios">Diários</a><a href="#commits">Commits</a><a href="#uso">Uso</a>';
+
+  // agentes
+  $("ag-cnt").textContent = ags.length ? ags.length + " ativos" : "";
+  $("ag-lista").innerHTML = ags.length ? ags.map(function (a) {
+    var cls = a.idade_min < 2 ? "ativo" : a.idade_min < 15 ? "espera" : "parado";
+    var est = a.entregou ? "relatório entregue" : cls === "ativo" ? "ativo" : cls === "espera" ? "em espera" : "parado";
+    var item = a.papel === "product"
+      ? '<span class="tit">triagem do backlog' + (a.item ? ' · citou <span class="cod">' + esc(a.item) + '</span>' : '') + '</span>'
+      : (a.item ? '<span class="cod">' + esc(a.item) + '</span><span class="tit">' + esc(a.titulo) + '</span>' : '<span class="tit">sem item identificado</span>');
+    return '<div class="card ag ' + esc(a.papel) + '"><div class="cab"><span class="sinal ' + cls + '"></span><span class="papel">' + esc(a.papel) + '</span>' +
+      '<span class="est">' + est + ' · há ' + Math.round(a.idade_min) + ' min</span></div>' +
+      '<div class="item">' + item + '</div>' +
+      (a.containers && a.containers.length ? '<div class="meta">▣ ' + esc(a.containers.join(", ")) + '</div>' : "") +
+      (a.acao && a.acao.ferramenta ? '<div class="acao"><span class="f">' + esc(a.acao.ferramenta) + '</span><span class="d">' + esc(a.acao.descricao) + '</span></div>' : "") +
+      (a.disse ? '<div class="disse">' + esc(a.disse) + '</div>' : "") + '</div>';
+  }).join("") : '<div class="vazio">nenhum agente com atividade recente</div>';
+
+  // reprovados e bloqueados
+  $("fix-cnt").textContent = cx.length ? cx.length + " itens" : "";
+  $("fix-lista").innerHTML = cx.length ? cx.map(function (x) {
+    var falhas = (x.falhas || []).map(function (f) { return '<li class="f">' + esc(f) + '</li>'; }).join("");
+    var fazer = (x.fazer || []).map(function (f) { return '<li class="ok">' + esc(f) + '</li>'; }).join("");
+    return '<div class="card fix"><div class="cab"><span class="cod">' + esc(x.item) + '</span><span class="tag ' + esc(x.estado) + '">' + ROT[x.estado] + '</span></div>' +
+      '<div class="tit">' + esc(x.titulo) + '</div>' +
+      (x.motivo ? '<div class="bl"><div class="r">motivo</div><div class="motivo">' + esc(x.motivo) + '</div></div>' : "") +
+      (falhas ? '<div class="bl"><div class="r">o que falhou</div><ul>' + falhas + '</ul></div>' : "") +
+      (fazer ? '<div class="bl"><div class="r">como corrigir</div><ul>' + fazer + '</ul></div>' : "") +
+      ((x.comandos || []).length ? '<div class="bl"><div class="r">comando</div>' + x.comandos.map(function (k) { return '<div class="cmd">$ ' + esc(k) + '</div>'; }).join("") + '</div>' : "") +
+      '<div class="quem">quem resolve <b>' + esc(x.quem) + '</b></div></div>';
+  }).join("") : '<div class="vazio ok">✓ nenhum item reprovado ou bloqueado</div>';
+
+  // itens
+  $("it-cnt").textContent = its.length + " itens";
+  $("it-lista").innerHTML = its.map(function (i) {
+    var q = (i.desde || "").slice(5, 16).replace("T", " ").replace(/^(\d\d)-(\d\d)/, "$2/$1");
+    return '<div class="it ' + esc(i.estado) + '"><span class="cod">' + esc(i.item) + '</span><div class="top"><span class="tag ' + esc(i.estado) + '">' + ROT[i.estado] + '</span><span class="q">' + esc(i.dono) + ' · ' + esc(q) + '</span></div>' +
+      '<div class="t">' + esc(i.estado === "bloqueado" ? i.bloqueio : i.titulo) + '</div></div>';
+  }).join("") || '<div class="vazio">nada em andamento</div>';
+
+  // diários
+  $("di-lista").innerHTML = (d.diarios || []).map(function (x) {
+    var cab = x.cabecalho.replace(/^(\d{4})-(\d\d)-(\d\d) /, "$3/$2 ");
+    return '<div class="card diario ' + esc(x.papel) + '"><div class="cab"><span class="papel">' + esc(x.papel) + '</span><span class="cabtxt">' + esc(cab) + '</span></div>' +
+      (x.corpo && x.corpo.length ? '<ul>' + x.corpo.map(function (l) { return '<li>' + esc(l.replace(/^- /, "")) + '</li>'; }).join("") + '</ul>' : "") + '</div>';
+  }).join("");
+
+  // commits
+  $("co-lista").innerHTML = (d.commits || []).map(function (k) {
+    return '<div class="c"><span class="h">' + esc(k.hora) + ' ' + esc(k.hash) + '</span><span class="q ' + esc(k.quem) + '">' + esc(k.quem) + '</span><span class="m">' + esc(k.msg) + '</span></div>';
+  }).join("");
+
+  // uso
+  var u = d.uso || {};
+  var kp = function (l, v, s, cls) { return '<div class="kpi ' + (cls || "") + '"><div class="l">' + l + '</div><div class="v">' + v + '</div><div class="s">' + s + '</div></div>'; };
+  $("uso-kp").innerHTML = kp("contexto hoje", fmt(u.contexto_hoje), "inclui cache") + kp("gerado hoje", fmt(u.gerado_hoje), "tokens de saída") + kp("última 1 h", fmt(u.ultima_1h), "ritmo atual") + kp("últimas 5 h", fmt(u.ultimas_5h), "janela de 5 h");
+  var pp = u.por_papel || {};
+  $("uso-tab").innerHTML = ["sessão", "dev", "qa", "product", "agente"].filter(function (k) { return pp[k]; }).map(function (k) {
+    var p = pp[k]; return '<tr><td>' + esc(k) + '</td><td>' + p.n + ' chamadas</td><td>' + fmt(p.ctx) + ' lidos</td><td>' + fmt(p.out) + ' gerados</td></tr>';
+  }).join("") + (u.por_modelo ? '<tr><td colspan="4" style="white-space:normal">' + Object.keys(u.por_modelo).map(function (m) { return esc(m) + " " + fmt(u.por_modelo[m]); }).join(" · ") + '</td></tr>' : "");
+  if (u.orcamento_5h) {
+    var fr = Math.min(1, (u.ultimas_5h || 0) / u.orcamento_5h), cl = fr < .7 ? "" : fr < .9 ? "w" : "b";
+    $("orc").hidden = false;
+    $("orc").innerHTML = '<div class="barra"><i class="' + cl + '" style="width:' + Math.round(fr * 100) + '%"></i></div><div class="nota num">' + Math.round(fr * 100) + '% de ' + fmt(u.orcamento_5h) + ' em 5 h</div>';
+  }
+  $("rodape").textContent = "gerado " + gerado.toLocaleString("pt-BR") + (MODO_FETCH ? " · dados atualizados a cada minuto pela máquina de orquestração; a página busca de novo a cada 60 s" : " · republicado a cada 2 min enquanto a orquestração estiver ativa · ao voltar para a página ela recarrega sozinha se estiver velha");
+  }
+  if (MODO_FETCH) {
+    var buscar = function () {
+      fetch("quadro.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(render)
+        .catch(function () { var t = $("fresco-txt"); if (t && t.textContent.indexOf("buscando") === 0) t.textContent = "sem acesso aos dados"; });
+    };
+    render(null); buscar(); setInterval(buscar, 60000);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") buscar(); });
+  } else {
+    render(embutido);
+  }
+})();
+</script>
+</body></html>
