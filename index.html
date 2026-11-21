@@ -163,6 +163,20 @@ section > h2 .cnt { font-family: var(--mono); font-weight: 500; text-transform: 
 .orc { margin-top: 10px; } .orc .barra > i.w { background: var(--warn); } .orc .barra > i.b { background: var(--bad); }
 .rodape { margin-top: 28px; color: var(--fg3); font-size: 12px; text-align: center; font-family: var(--mono); }
 @media (prefers-reduced-motion: no-preference) { .sinal.ativo { animation: pulso 1.8s ease-in-out infinite; } @keyframes pulso { 50% { box-shadow: 0 0 0 7px transparent; } } }
+.pf-resumo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+@media (min-width: 640px) { .pf-resumo { grid-template-columns: repeat(4, 1fr); } }
+.pf-resumo div { background: var(--surf); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 13px; box-shadow: var(--sombra); }
+.pf-resumo span { display: block; color: var(--fg2); font-size: 12.5px; }
+.pf-resumo b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.pf-lin { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.pf-lin:first-child { border-top: 0; }
+.pf-nome { font-weight: 600; overflow-wrap: anywhere; }
+.pf-num { font-weight: 700; font-variant-numeric: tabular-nums; }
+.pf-bar { grid-column: 1 / -1; display: flex; height: 9px; border-radius: 5px; overflow: hidden; background: var(--surf3); }
+.pf-bar i { display: block; background: var(--ok); } .pf-bar i + i { background: var(--warn); }
+.pf-det { grid-column: 1 / -1; color: var(--fg2); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+@media (min-width: 760px) { .pf-lin { grid-template-columns: minmax(190px, 1.3fr) minmax(150px, 2fr) 56px minmax(230px, 1.4fr); align-items: center; } .pf-bar, .pf-det { grid-column: auto; } .pf-bar { grid-row: 1; grid-column: 2; } .pf-num { grid-column: 3; text-align: right; } .pf-det { grid-column: 4; text-align: right; } }
+.pf-nota { color: var(--fg2); font-size: 12.5px; margin-top: 8px; }
 </style>
 
 <div class="wrap">
@@ -178,6 +192,7 @@ section > h2 .cnt { font-family: var(--mono); font-weight: 500; text-transform: 
 <nav class="nav" id="nav" aria-label="seções"></nav>
 
 <main class="grade">
+  <section class="c12" id="progresso"><h2>Tempo e porcentagem <span class="cnt" id="pf-cnt"></span></h2><div class="pf-resumo" id="pf-resumo"></div><div class="card" id="pf-lista"></div><p class="pf-nota">Só conta como concluído o que o QA aprovou. O tempo é uma estimativa de máquina (0,85 h a 1,1 h por item, com QA e retrabalho) e não inclui PR, CI, merge, as decisões do dono nem os dias de uso real do ensaio. A fase 8 só entra em uso com a decisão do dono.</p></section>
   <section class="c12" id="agentes"><h2>Agentes <span class="cnt" id="ag-cnt"></span></h2><div class="ags" id="ag-lista"></div></section>
   <section class="c12" id="corrigir"><h2>Reprovados e bloqueados · como corrigir <span class="cnt" id="fix-cnt"></span></h2><div class="lista" id="fix-lista"></div></section>
   <section class="c7" id="itens"><h2>Itens em andamento <span class="cnt" id="it-cnt"></span></h2><div class="its" id="it-lista"></div></section>
@@ -229,9 +244,28 @@ section > h2 .cnt { font-family: var(--mono); font-weight: 500; text-transform: 
     '<div class="kpi dev"><div class="l">em dev</div><div class="v">' + (c.em_dev || 0) + '</div><div class="s">' + d.a_fazer + ' a fazer</div></div>';
   $("alerta-api").hidden = !!d.api_ok;
 
+  // tempo e porcentagem
+  var pg = d.progresso, pct1 = function (n) { return String(n).replace(".", ",") + "%"; };
+  var horas = function (x) { return x.horas_min === x.horas_max ? "~" + x.horas_min + " h" : x.horas_min + " a " + x.horas_max + " h"; };
+  $("progresso").hidden = !pg;
+  if (pg) {
+    var pt = pg.total;
+    $("pf-cnt").textContent = pt.aprovados + " de " + pt.itens + " itens";
+    var bloco = function (l, v) { return '<div><span>' + l + '</span><b>' + v + '</b></div>'; };
+    $("pf-resumo").innerHTML = bloco("concluído", pct1(pt.pct)) + bloco("aprovados", pt.aprovados + " de " + pt.itens) + bloco("em curso · a fazer", pt.em_curso + " · " + pt.a_fazer) + bloco("tempo restante", horas(pt));
+    $("pf-lista").innerHTML = pg.fases.map(function (f) {
+      var curso = f.itens ? 100 * f.em_curso / f.itens : 0;
+      return '<div class="pf-lin"><div class="pf-nome">Fase ' + f.fase + ' · ' + esc(f.nome) + '</div>' +
+        '<div class="pf-bar" role="img" aria-label="' + pct1(f.pct) + ' concluído"><i style="width:' + f.pct + '%"></i><i style="width:' + curso + '%"></i></div>' +
+        '<div class="pf-num">' + Math.round(f.pct) + '%</div>' +
+        '<div class="pf-det">' + f.aprovados + '/' + f.itens + ' aprov. · ' + f.em_curso + ' em curso · ' + horas(f) + '</div></div>';
+    }).join("");
+  }
+
   // navegação
   var ags = d.agentes || [], cx = d.corrigir || [], its = d.itens || [];
   $("nav").innerHTML =
+    '<a href="#progresso">Progresso</a>' +
     '<a href="#agentes">Agentes<b>' + ags.length + '</b></a>' +
     '<a href="#corrigir"' + (cx.length ? ' class="bad"' : '') + '>Corrigir<b>' + cx.length + '</b></a>' +
     '<a href="#itens">Itens<b>' + its.length + '</b></a>' +
